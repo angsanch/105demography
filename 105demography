@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+##
+## EPITECH PROJECT, 2023
+## 104neutrinos
+## File description:
+## neurinos maths
+##
+
+import sys
+
+def print_help():
+    print("USAGE\n\t./105demography [code]+\n")
+    print("DESCRIPTION\n\tcode\tcountry code")
+
+def parse_int(string):
+    try:
+        return int(string)
+    except:
+        return 0
+
+def get_data():
+    data = {"countries": []}
+    line = [""]
+    with open("105demography_data.csv", "r") as file:
+        data["years"] = [int(i) for i in file.readline().split(";")[2:]]
+        line = file.readline().split(";")
+        while len(line) > 2:
+            data["countries"].append({"name": line[0], "code": line[1],
+                "population": [parse_int(i) for i in line[2:]]})
+            line = file.readline().split(";")
+
+def math():
+    data = get_data()
+
+def main():
+    argc = len(sys.argv)
+    if argc < 2:
+        raise Exception("ERROR: Not enough arguments")
+    elif argc == 2 and sys.argv[1] == "-h":
+        print_help()
+    else:
+        math()
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print(e, file=sys.stderr)
+        exit(84)

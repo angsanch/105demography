@@ -1,36 +1,57 @@
 #!/usr/bin/python3
 ##
 ## EPITECH PROJECT, 2023
-## 104neutrinos
+## 105demography
 ## File description:
-## neurinos maths
+## demography maths
 ##
 
 import sys
+import stats
 
 def print_help():
     print("USAGE\n\t./105demography [code]+\n")
     print("DESCRIPTION\n\tcode\tcountry code")
 
-def parse_int(string):
+def parse_population(string):
     try:
-        return int(string)
+        return int(string) / 1_000_000
     except:
         return 0
 
 def get_data():
     data = {"countries": []}
-    line = [""]
     with open("105demography_data.csv", "r") as file:
         data["years"] = [int(i) for i in file.readline().split(";")[2:]]
         line = file.readline().split(";")
         while len(line) > 2:
             data["countries"].append({"name": line[0], "code": line[1],
-                "population": [parse_int(i) for i in line[2:]]})
+                "population": [parse_population(i) for i in line[2:]]})
             line = file.readline().split(";")
+    return data
+
+def print_stats(s):
+    print(f"""Fit1
+\tY = {s['xa']:.2f} X {'+' if s['xb'] >= 0 else '-'} {abs(s['xb']):.2f}
+\tRoot-mean-square deviation: {s['dx']:.2f}
+\tPopulation in 2050: {stats.estimate_y(s, 2050):.2f}
+Fit2
+\tX = {s['ya']:.2f} X {'+' if s['yb'] >= 0 else '-'} {abs(s['yb']):.2f}
+\tRoot-mean-square deviation: {s['dy']:.2f}
+\tPopulation in 2050: {stats.estimate_x(s, 2050):.2f}
+Correlation: {s['r']:.4f}""")
 
 def math():
+    codes = sys.argv[1:]
     data = get_data()
+    countries = [i for i in data["countries"] if i["code"] in codes]
+    if len(codes) != len(countries):
+        raise Exception("Unrecogniced code")
+    names = [i['name'] for i in countries]
+    names.sort()
+    print(f"Country: {', '.join(names)}")
+    total_pop = stats.sum_populations(countries)
+    print_stats(stats.make_stats(data["years"], total_pop))
 
 def main():
     argc = len(sys.argv)

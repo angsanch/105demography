@@ -36,7 +36,7 @@ def print_stats(s):
 \tRoot-mean-square deviation: {s['dx']:.2f}
 \tPopulation in 2050: {stats.estimate_y(s, 2050):.2f}
 Fit2
-\tX = {s['ya']:.2f} X {'+' if s['yb'] >= 0 else '-'} {abs(s['yb']):.2f}
+\tX = {s['ya']:.2f} Y {'+' if s['yb'] >= 0 else '-'} {abs(s['yb']):.2f}
 \tRoot-mean-square deviation: {s['dy']:.2f}
 \tPopulation in 2050: {stats.estimate_x(s, 2050):.2f}
 Correlation: {s['r']:.4f}""")
